@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <title>Vue app</title>
+
+</head>
+<body>
+<div id="main" class="container">
+
+    <div class="input-group mb-3">
+        <div class="input-group-text">
+            <select v-model="language" class="form-select">
+                <option v-for="option in options" v-bind:value="option.value">
+                    {{ option.text }}
+                </option>
+            </select>
+        </div>
+        <input type="text" class="form-control" aria-label="Titre de la page" v-model="page.pageTitle">
+    </div>
+    <img v-if="page.picture !== ''" :src="page.picture">
+    <p>
+        {{page.summary}}
+    </p>
+    <div v-for="hPage in pages" class="card-deck">
+        <div class="card" style="width: 18rem;" @click="page.pageTitle = hPage.pageTitle">
+            <img class="card-img-top" v-if="hPage.picture !== ''" :src="hPage.picture" alt="Card image cap">
+            <div class="card-body">
+                <p>{{hPage.pageTitle}}</p>
+                <a v-if="page.pageTitle !== hPage.pageTitle" @click="page.pageTitle = hPage.pageTitle" class="btn btn-primary">ReSearch</a>
+                <a @click="removePage(hPage.pageTitle)" class="btn btn-danger">Remove</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- JavaScript Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.0.5/vue.min.js"></script>
+<script>
+    // Creating a new Vue instance and pass in an options object.
+    const demo = new Vue({
+
+        // A DOM element to mount our view model.
+        el: '#main',
+
+        // Define properties and give them initial values.
+        data: {
+            page: {
+                pageTitle: 'Cuillère',
+                summary: '',
+                picture: '',
+            },
+            pages: [],
+            language: 'fr',
+            options: [
+                { text: 'Français', value: 'fr' },
+                { text: 'Anglais', value: 'en' },
+            ],
+        },
+        created: function () {
+            this.fetchPage()
+        },
+        watch: {
+            'page.pageTitle': function (newValue, oldValue){
+                this.fetchPage()
+            },
+        },
+        methods: {
+            fetchPage: function () {
+                this.fetchSummary().then(result => {
+                    this.fetchPicture().then(result => {
+                        const self = this
+                        if (this.page.summary != '' && !this.pages.some(page => page.pageTitle === self.page.pageTitle)) {
+                            console.log(this.page.pageTitle)
+                            this.pages.push({...this.page})
+                        }
+                    })
+                })
+            },
+            fetchPicture: async function () {
+                const self = this
+                let url = "https://" + this.language + ".wikipedia.org/w/api.php?action=query&titles=" + this.page.pageTitle + "&prop=pageimages&format=json&pithumbsize=100"
+                const response = await axios.get(url)
+                console.log(response.data)
+                if (response.data.query) {
+                    const pages = response.data.query.pages
+                    let pageID = Object.keys(pages)[0]
+                    if (pageID == -1 || !pages[pageID].thumbnail) {
+                        this.page.picture = ''
+                    } else {
+                        this.page.picture = pages[pageID].thumbnail.source
+                    }
+                }
+            },
+            fetchSummary: async function () {
+                const self = this
+                let url = "https://" + this.language + ".wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro&explaintext&redirects=1&titles=" + this.page.pageTitle
+                const response = await axios.get(url)
+                console.log(response.data)
+                if (response.data.query) {
+                    const pages = response.data.query.pages
+                    let pageID = Object.keys(pages)[0]
+                    if (pageID == -1) {
+                        this.page.summary = ''
+                    } else {
+                        this.page.summary = pages[pageID].extract
+                    }
+                }
+            },
+            removePage: function (pageTitle) {
+                this.pages = this.pages.filter(page => page.pageTitle !== pageTitle)
+            }
+        }
+    });
+</script>
+</body>
+</html>
