@@ -41,13 +41,8 @@
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.0.5/vue.min.js"></script>
 <script>
-    // Creating a new Vue instance and pass in an options object.
-    const demo = new Vue({
-
-        // A DOM element to mount our view model.
+    const pasunedemo = new Vue({
         el: '#main',
-
-        // Define properties and give them initial values.
         data: {
             page: {
                 pageTitle: 'Cuillère',
@@ -75,7 +70,6 @@
                     this.fetchPicture().then(_ => {
                         const self = this
                         if (this.page.summary != '' && !this.pages.some(page => page.pageTitle === self.page.pageTitle)) {
-                            console.log(this.page.pageTitle)
                             this.pages.push({...this.page})
                         }
                     })
@@ -93,11 +87,7 @@
                 if (response.data.query) {
                     const pages = response.data.query.pages
                     let pageID = Object.keys(pages)[0]
-                    if (pageID == -1 || !pages[pageID].thumbnail) {
-                        this.page.picture = ''
-                    } else {
-                        this.page.picture = pages[pageID].thumbnail.source
-                    }
+                    this.page.picture = pageID == -1 || !pages[pageID].thumbnail ? '' : pages[pageID].thumbnail.source
                 }
             },
             fetchSummary: async function () {
@@ -113,11 +103,7 @@
                 if (response.data.query) {
                     const pages = response.data.query.pages
                     let pageID = Object.keys(pages)[0]
-                    if (pageID == -1) {
-                        this.page.summary = ''
-                    } else {
-                        this.page.summary = pages[pageID].extract
-                    }
+                    this.page.summary = pageID == -1 ? '' : pages[pageID].extract
                 }
             },
             removePage: function (pageTitle) {
