@@ -71,8 +71,8 @@
         },
         methods: {
             fetchPage: function () {
-                this.fetchSummary().then(result => {
-                    this.fetchPicture().then(result => {
+                this.fetchSummary().then(_ => {
+                    this.fetchPicture().then(_ => {
                         const self = this
                         if (this.page.summary != '' && !this.pages.some(page => page.pageTitle === self.page.pageTitle)) {
                             console.log(this.page.pageTitle)
@@ -82,7 +82,6 @@
                 })
             },
             fetchPicture: async function () {
-                const self = this
                 let url = "https://" + this.language + ".wikipedia.org/w/api.php?action=query&titles=" + this.page.pageTitle + "&prop=pageimages&format=json&pithumbsize=100&origin=*"
                 const response = await axios.get(url, { headers: {
                     'Origin': 'https://theooiry.github.io',
@@ -100,7 +99,6 @@
                 }
             },
             fetchSummary: async function () {
-                const self = this
                 let url = "https://" + this.language + ".wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro&explaintext&redirects=1&titles=" + this.page.pageTitle + "&origin=*"
                 const response = await axios.get(url, {
                     headers: {
