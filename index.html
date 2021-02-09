@@ -84,8 +84,7 @@
             fetchPicture: async function () {
                 const self = this
                 let url = "https://" + this.language + ".wikipedia.org/w/api.php?action=query&titles=" + this.page.pageTitle + "&prop=pageimages&format=json&pithumbsize=100"
-                const response = await axios.get(url)
-                console.log(response.data)
+                const response = await axios.get(url, { headers: {"Origin": "https://theooiry.github.io", "Content-Type": "application/json; charset=UTF-8"}})
                 if (response.data.query) {
                     const pages = response.data.query.pages
                     let pageID = Object.keys(pages)[0]
@@ -99,8 +98,7 @@
             fetchSummary: async function () {
                 const self = this
                 let url = "https://" + this.language + ".wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro&explaintext&redirects=1&titles=" + this.page.pageTitle
-                const response = await axios.get(url)
-                console.log(response.data, { headers: {"Origin": "https://theooiry.github.io", "Content-Type": "application/json; charset=UTF-8"}})
+                const response = await axios.get(url, { headers: {"Origin": "https://theooiry.github.io", "Content-Type": "application/json; charset=UTF-8"}})
                 if (response.data.query) {
                     const pages = response.data.query.pages
                     let pageID = Object.keys(pages)[0]
