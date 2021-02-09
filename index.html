@@ -86,7 +86,8 @@
                 const response = await axios.get(url, { headers: {
                     'Origin': 'https://theooiry.github.io',
                     'Access-Control-Allow-Origin': '*',
-                    "Content-Type": "application/json; charset=UTF-8"
+                    "Content-Type": "application/json; charset=UTF-8",
+                    'upgrade-insecure-requests': '1'
                 }})
                 if (response.data.query) {
                     const pages = response.data.query.pages
@@ -104,7 +105,8 @@
                     headers: {
                         'Origin': 'https://theooiry.github.io',
                         'Access-Control-Allow-Origin': '*',
-                        "Content-Type": "application/json; charset=UTF-8"
+                        "Content-Type": "application/json; charset=UTF-8",
+                        'upgrade-insecure-requests': '1'
                 }})
                 if (response.data.query) {
                     const pages = response.data.query.pages
