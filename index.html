@@ -83,8 +83,9 @@
             },
             fetchPicture: async function () {
                 const self = this
-                let url = "https://" + this.language + ".wikipedia.org/w/api.php?action=query&origin=*&titles=" + this.page.pageTitle + "&prop=pageimages&format=json&pithumbsize=100"
+                let url = "https://" + this.language + ".wikipedia.org/w/api.php?action=query&titles=" + this.page.pageTitle + "&prop=pageimages&format=json&pithumbsize=100&origin=*"
                 const response = await axios.get(url, { headers: {
+                    'Origin': 'https://theooiry.github.io',
                     'Access-Control-Allow-Origin': '*',
                     "Content-Type": "application/json; charset=UTF-8"
                 }})
@@ -100,9 +101,10 @@
             },
             fetchSummary: async function () {
                 const self = this
-                let url = "https://" + this.language + ".wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro&explaintext&origin=*&redirects=1&titles=" + this.page.pageTitle
+                let url = "https://" + this.language + ".wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro&explaintext&redirects=1&titles=" + this.page.pageTitle + "&origin=*"
                 const response = await axios.get(url, {
                     headers: {
+                        'Origin': 'https://theooiry.github.io',
                         'Access-Control-Allow-Origin': '*',
                         "Content-Type": "application/json; charset=UTF-8"
                 }})
