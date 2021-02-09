@@ -77,13 +77,7 @@
             },
             fetchPicture: async function () {
                 let url = "https://" + this.language + ".wikipedia.org/w/api.php?action=query&titles=" + this.page.pageTitle + "&prop=pageimages&format=json&pithumbsize=100&origin=*"
-                const response = await axios.get(url, {}, { headers: {
-                    'Origin': 'https://theooiry.github.io',
-                    'Access-Control-Allow-Origin': '*',
-                    "Content-Type": "application/json; charset=UTF-8",
-                    'upgrade-insecure-requests': '1',
-                    'sec-fetch-mode': 'navigate'
-                }})
+                const response = await axios.get(url)
                 if (response.data.query) {
                     const pages = response.data.query.pages
                     let pageID = Object.keys(pages)[0]
@@ -92,14 +86,7 @@
             },
             fetchSummary: async function () {
                 let url = "https://" + this.language + ".wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro&explaintext&redirects=1&titles=" + this.page.pageTitle + "&origin=*"
-                const response = await axios.get(url, {}, {
-                    headers: {
-                        'Origin': 'https://theooiry.github.io',
-                        'Access-Control-Allow-Origin': '*',
-                        "Content-Type": "application/json; charset=UTF-8",
-                        'upgrade-insecure-requests': '1',
-                        'sec-fetch-mode': 'navigate'
-                }})
+                const response = await axios.get(url)
                 if (response.data.query) {
                     const pages = response.data.query.pages
                     let pageID = Object.keys(pages)[0]
